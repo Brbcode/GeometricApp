@@ -39,8 +39,8 @@ public class JFrameApp extends javax.swing.JFrame {
         jlbl_out_edge_length = new javax.swing.JLabel();
         jlbl_out_info_shape_name = new javax.swing.JLabel();
         jbtn_reset_angle = new javax.swing.JButton();
-        jbtn_magic = new javax.swing.JButton();
         jpnl_canvas = new javax.swing.JPanel();
+        jtbtn_magic = new javax.swing.JToggleButton();
         jmenu_bar = new javax.swing.JMenuBar();
         jmenu_edit = new javax.swing.JMenu();
         jmenu_edit_reset = new javax.swing.JMenuItem();
@@ -196,23 +196,22 @@ public class JFrameApp extends javax.swing.JFrame {
         jbtn_reset_angle.setText("Reset angle offset");
         jbtn_reset_angle.setToolTipText("");
 
-        jbtn_magic.setFont(new java.awt.Font("SansSerif", 0, 67)); // NOI18N
-        jbtn_magic.setText("✡");
-        jbtn_magic.setToolTipText("");
-        jbtn_magic.setEnabled(false);
-
         jpnl_canvas.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout jpnl_canvasLayout = new javax.swing.GroupLayout(jpnl_canvas);
         jpnl_canvas.setLayout(jpnl_canvasLayout);
         jpnl_canvasLayout.setHorizontalGroup(
             jpnl_canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 786, Short.MAX_VALUE)
         );
         jpnl_canvasLayout.setVerticalGroup(
             jpnl_canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 445, Short.MAX_VALUE)
         );
+
+        jtbtn_magic.setFont(new java.awt.Font("SansSerif", 0, 67)); // NOI18N
+        jtbtn_magic.setText("✡");
+        jtbtn_magic.setEnabled(false);
 
         jmenu_edit.setText("Edit");
         jmenu_edit.setToolTipText("");
@@ -265,22 +264,21 @@ public class JFrameApp extends javax.swing.JFrame {
                         .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbtn_reset_angle, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                            .addComponent(jbtn_magic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jbtn_reset_angle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtbtn_magic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jbtn_reset_angle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbtn_magic))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jpnl_options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jtbtn_magic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpnl_options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpnl_canvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -317,7 +315,6 @@ public class JFrameApp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jbtn_magic;
     private javax.swing.JButton jbtn_reset_angle;
     private final javax.swing.JLabel jlbl_final_edges = new javax.swing.JLabel();
     private final javax.swing.JLabel jlbl_final_info = new javax.swing.JLabel();
@@ -347,5 +344,6 @@ public class JFrameApp extends javax.swing.JFrame {
     private javax.swing.JPanel jpnl_out_info_area;
     private javax.swing.JSlider jslider_edges;
     private javax.swing.JSlider jslider_size;
+    private javax.swing.JToggleButton jtbtn_magic;
     // End of variables declaration//GEN-END:variables
 }
