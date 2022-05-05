@@ -14,11 +14,13 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reset Rotation"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmenu_edit_scale">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reset Scale"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -34,16 +36,25 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Show center"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_action_show_center"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jmenu_view_shcircle">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Circle"/>
+                <Property name="text" type="java.lang.String" value="Show Circumscribed Circle"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_action_show_circle"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jmenu_show_shlines">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Show Help Lines"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_action_show_help"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -57,6 +68,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="About"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_action_about"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -101,15 +115,15 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jpnl_canvas" max="32767" attributes="0"/>
+                  <Component id="jpnl_canvas_wrapper" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="jpnl_options" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jpnl_out_info_area" min="-2" max="-2" attributes="0"/>
+                      <Component id="jpnl_out_info_area" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jbtn_reset_angle" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jtbtn_magic" max="32767" attributes="0"/>
+                          <Component id="jbtn_reset_angle" pref="208" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -131,7 +145,7 @@
                   <Component id="jpnl_options" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jpnl_canvas" max="32767" attributes="0"/>
+              <Component id="jpnl_canvas_wrapper" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -280,18 +294,18 @@
                               <Component id="jlbl_info_edge_length" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jlbl_final_info_area" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jlbl_final_info_shape" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlbl_final_info_angle" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jlbl_final_info_perimeter" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jlbl_out_info_offset_angle" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlbl_out_info_shape_name" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlbl_out_info_area" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlbl_out_edge_length" min="-2" max="-2" attributes="0"/>
+                              <Component id="jlbl_out_info_shape_name" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jlbl_out_edge_length" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jlbl_out_info_area" max="32767" attributes="0"/>
+                              <Component id="jlbl_out_info_perimeter" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="31" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -317,8 +331,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jlbl_final_info_angle" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jlbl_out_info_offset_angle" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jlbl_final_info_perimeter" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jlbl_out_info_perimeter" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -334,17 +348,18 @@
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="18"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="jlbl_final_info_angle">
+        <Component class="javax.swing.JLabel" name="jlbl_final_info_perimeter">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Offset Angle: "/>
+            <Property name="text" type="java.lang.String" value="Perimeter:"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="18"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="jlbl_out_info_offset_angle">
+        <Component class="javax.swing.JLabel" name="jlbl_out_info_perimeter">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;degrees&gt;"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="&lt;number&gt;"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jlbl_final_info_area">
@@ -357,6 +372,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jlbl_out_info_area">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="&lt;number&gt;"/>
           </Properties>
         </Component>
@@ -367,6 +383,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jlbl_out_edge_length">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="&lt;number&gt;"/>
           </Properties>
         </Component>
@@ -380,6 +397,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jlbl_out_info_shape_name">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="&lt;name&gt;"/>
           </Properties>
         </Component>
@@ -391,13 +409,14 @@
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="jpnl_canvas">
+    <Container class="javax.swing.JPanel" name="jpnl_canvas_wrapper">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder/>
           </Border>
         </Property>
+        <Property name="autoscrolls" type="boolean" value="true"/>
       </Properties>
 
       <Layout>
@@ -421,6 +440,9 @@
         <Property name="text" type="java.lang.String" value="&#x2721;"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_magic"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

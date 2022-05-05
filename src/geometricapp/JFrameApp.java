@@ -1,7 +1,20 @@
 package geometricapp;
 
+import beans.property.Property;
+import beans.property.SimpleProperty;
+import java.awt.Color;
+import java.awt.Point;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import shape.RegularPolygon;
+import shape.RegularStarPolygon;
+import shape.Shape;
+import shape.regular.Heptagon;
+import shape.regular.Hexagon;
+import shape.regular.Octagon;
+import shape.regular.Pentagon;
+import shape.regular.Square;
+import shape.regular.Triangle;
 
 /**
  * Main JFrame, main windows that holds the most tools.
@@ -15,6 +28,7 @@ public class JFrameApp extends javax.swing.JFrame {
      */
     public JFrameApp() {
         initComponents();
+        late_init();
         
     }
 
@@ -33,13 +47,13 @@ public class JFrameApp extends javax.swing.JFrame {
         jslider_size = new javax.swing.JSlider();
         jlbl_out_size = new javax.swing.JLabel();
         jpnl_out_info_area = new javax.swing.JPanel();
-        jlbl_out_info_offset_angle = new javax.swing.JLabel();
+        jlbl_out_info_perimeter = new javax.swing.JLabel();
         jlbl_out_info_area = new javax.swing.JLabel();
         jlbl_info_edge_length = new javax.swing.JLabel();
         jlbl_out_edge_length = new javax.swing.JLabel();
         jlbl_out_info_shape_name = new javax.swing.JLabel();
         jbtn_reset_angle = new javax.swing.JButton();
-        jpnl_canvas = new javax.swing.JPanel();
+        jpnl_canvas_wrapper = new javax.swing.JPanel();
         jtbtn_magic = new javax.swing.JToggleButton();
         jmenu_bar = new javax.swing.JMenuBar();
         jmenu_edit = new javax.swing.JMenu();
@@ -131,20 +145,24 @@ public class JFrameApp extends javax.swing.JFrame {
 
         jlbl_final_info.setText("Info");
 
-        jlbl_final_info_angle.setText("Offset Angle: ");
+        jlbl_final_info_perimeter.setText("Perimeter:");
 
-        jlbl_out_info_offset_angle.setText("<degrees>");
+        jlbl_out_info_perimeter.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jlbl_out_info_perimeter.setText("<number>");
 
         jlbl_final_info_area.setText("Area: ");
 
+        jlbl_out_info_area.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jlbl_out_info_area.setText("<number>");
 
         jlbl_info_edge_length.setText("Edge Length: ");
 
+        jlbl_out_edge_length.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jlbl_out_edge_length.setText("<number>");
 
         jlbl_final_info_shape.setText("Shape: ");
 
+        jlbl_out_info_shape_name.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jlbl_out_info_shape_name.setText("<name>");
 
         javax.swing.GroupLayout jpnl_out_info_areaLayout = new javax.swing.GroupLayout(jpnl_out_info_area);
@@ -160,14 +178,14 @@ public class JFrameApp extends javax.swing.JFrame {
                             .addComponent(jlbl_info_edge_length)
                             .addComponent(jlbl_final_info_area)
                             .addComponent(jlbl_final_info_shape)
-                            .addComponent(jlbl_final_info_angle))
+                            .addComponent(jlbl_final_info_perimeter))
                         .addGap(23, 23, 23)
                         .addGroup(jpnl_out_info_areaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlbl_out_info_offset_angle)
-                            .addComponent(jlbl_out_info_shape_name)
-                            .addComponent(jlbl_out_info_area)
-                            .addComponent(jlbl_out_edge_length))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                            .addComponent(jlbl_out_info_shape_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jlbl_out_edge_length, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jlbl_out_info_area, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jlbl_out_info_perimeter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jpnl_out_info_areaLayout.setVerticalGroup(
             jpnl_out_info_areaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -188,39 +206,47 @@ public class JFrameApp extends javax.swing.JFrame {
                     .addComponent(jlbl_out_info_area))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpnl_out_info_areaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlbl_final_info_angle)
-                    .addComponent(jlbl_out_info_offset_angle))
+                    .addComponent(jlbl_final_info_perimeter)
+                    .addComponent(jlbl_out_info_perimeter))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jbtn_reset_angle.setText("Reset angle offset");
         jbtn_reset_angle.setToolTipText("");
 
-        jpnl_canvas.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jpnl_canvas_wrapper.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jpnl_canvas_wrapper.setAutoscrolls(true);
 
-        javax.swing.GroupLayout jpnl_canvasLayout = new javax.swing.GroupLayout(jpnl_canvas);
-        jpnl_canvas.setLayout(jpnl_canvasLayout);
-        jpnl_canvasLayout.setHorizontalGroup(
-            jpnl_canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jpnl_canvas_wrapperLayout = new javax.swing.GroupLayout(jpnl_canvas_wrapper);
+        jpnl_canvas_wrapper.setLayout(jpnl_canvas_wrapperLayout);
+        jpnl_canvas_wrapperLayout.setHorizontalGroup(
+            jpnl_canvas_wrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 786, Short.MAX_VALUE)
         );
-        jpnl_canvasLayout.setVerticalGroup(
-            jpnl_canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jpnl_canvas_wrapperLayout.setVerticalGroup(
+            jpnl_canvas_wrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 445, Short.MAX_VALUE)
         );
 
         jtbtn_magic.setFont(new java.awt.Font("SansSerif", 0, 67)); // NOI18N
         jtbtn_magic.setText("✡");
         jtbtn_magic.setEnabled(false);
+        jtbtn_magic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_magic(evt);
+            }
+        });
 
         jmenu_edit.setText("Edit");
         jmenu_edit.setToolTipText("");
 
         jmenu_edit_reset.setText("Reset Rotation");
         jmenu_edit_reset.setToolTipText("");
+        jmenu_edit_reset.setEnabled(false);
         jmenu_edit.add(jmenu_edit_reset);
 
         jmenu_edit_scale.setText("Reset Scale");
+        jmenu_edit_scale.setEnabled(false);
         jmenu_edit.add(jmenu_edit_scale);
 
         jmenu_bar.add(jmenu_edit);
@@ -230,12 +256,27 @@ public class JFrameApp extends javax.swing.JFrame {
 
         jmenu_view_shcenter.setSelected(true);
         jmenu_view_shcenter.setText("Show center");
+        jmenu_view_shcenter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_action_show_center(evt);
+            }
+        });
         jmenu_view.add(jmenu_view_shcenter);
 
-        jmenu_view_shcircle.setText("Show Circle");
+        jmenu_view_shcircle.setText("Show Circumscribed Circle");
+        jmenu_view_shcircle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_action_show_circle(evt);
+            }
+        });
         jmenu_view.add(jmenu_view_shcircle);
 
         jmenu_show_shlines.setText("Show Help Lines");
+        jmenu_show_shlines.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_action_show_help(evt);
+            }
+        });
         jmenu_view.add(jmenu_show_shlines);
 
         jmenu_bar.add(jmenu_view);
@@ -244,6 +285,11 @@ public class JFrameApp extends javax.swing.JFrame {
         jmenu_help.setToolTipText("");
 
         jmenu_help_about.setText("About");
+        jmenu_help_about.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_action_about(evt);
+            }
+        });
         jmenu_help.add(jmenu_help_about);
 
         jmenu_bar.add(jmenu_help);
@@ -257,15 +303,15 @@ public class JFrameApp extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpnl_canvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpnl_canvas_wrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jpnl_options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbtn_reset_angle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtbtn_magic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtbtn_magic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jbtn_reset_angle, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -280,7 +326,7 @@ public class JFrameApp extends javax.swing.JFrame {
                     .addComponent(jpnl_out_info_area, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpnl_options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jpnl_canvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jpnl_canvas_wrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -288,6 +334,109 @@ public class JFrameApp extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void menu_action_show_circle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_action_show_circle
+        var toggled = this.jmenu_view_shcircle.isSelected();        
+        canvas.drawCircumscribedCircle().set(toggled);
+    }//GEN-LAST:event_menu_action_show_circle
+
+    private void menu_action_show_center(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_action_show_center
+        var toggled = this.jmenu_view_shcenter.isSelected();     
+        canvas.drawCenter().set(toggled);
+    }//GEN-LAST:event_menu_action_show_center
+
+    private void menu_action_show_help(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_action_show_help
+        var toggled = this.jmenu_show_shlines.isSelected(); 
+        canvas.drawHelp().set(toggled);
+    }//GEN-LAST:event_menu_action_show_help
+
+    private void menu_action_about(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_action_about
+        AboutDialog dialog = new AboutDialog(this,true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_menu_action_about
+
+    private void btn_magic(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_magic
+        if(this.jtbtn_magic.isSelected())
+        {
+            this.jtbtn_magic.setBackground(new Color(255,0,0,80));
+            canvas.drawStar().set(true);
+        }
+        else{
+            this.jtbtn_magic.setBackground(new Color(76,80,82));
+            canvas.drawStar().set(false);
+        }
+    }//GEN-LAST:event_btn_magic
+
+    private void late_init(){
+        canvas = new Canvas(jpnl_canvas_wrapper);
+        edges = new SimpleProperty<Integer>(3);
+        size = new SimpleProperty<Double>(0.2);
+        /*
+        * EDGES BINDS
+        */
+        edges.addListener((obs,ov,nv)->{
+            this.jslider_edges.setValue(nv);
+            this.jlbl_out_edges.setText(nv.toString());
+            update_shape(nv,size.get()*canvas.getHeight()/2);
+        });
+        this.jslider_edges.addChangeListener((event)->edges.set(this.jslider_edges.getValue()));
+        this.jlbl_out_edges.setText(edges.get().toString());
+        this.jslider_edges.setValue(edges.get());
+        
+        
+        /*
+        * SIZE BINDS
+        */
+        size.addListener((obs,ov,nv)->{
+            this.jlbl_out_size.setText(String.format("%3d%%",(int) (nv*100)));
+            this.jslider_size.setValue((int) (nv*100));
+            update_shape(edges.get(),nv*canvas.getHeight()/2);
+        });
+        this.jslider_size.addChangeListener((event)->{
+                size.set( this.jslider_size.getValue()*1.0/100 );
+        });
+        this.jlbl_out_size.setText(String.format("%3d%%",(int) (size.get()*100)));
+        this.jslider_size.setValue((int) (size.get()*100));
+        canvas.getShapeSizeProperty().bind(size);
+        canvas.getShapeSizeProperty().set(size.get());                
+                
+        var toggled = this.jmenu_view_shcenter.isSelected();     
+        canvas.drawCenter().set(toggled);
+        
+        toggled = this.jmenu_view_shcircle.isSelected();
+        canvas.drawCircumscribedCircle().set(toggled);
+        
+        toggled = this.jmenu_show_shlines.isSelected(); 
+        canvas.drawHelp().set(toggled);
+        
+        Shape shape = new Triangle(new Point(0,0),size.get()*canvas.getHeight()/2);
+        canvas.getShapeProperty().set(shape);
+        
+        canvas.getShapeProperty().addListener((obs,ov,nv)->{
+            if(nv==null) return;
+            RegularPolygon polygon = (RegularPolygon) nv;
+            this.jlbl_out_info_shape_name.setText(polygon.getName());
+            this.jlbl_out_edge_length.setText(String.format("%3d",(int) polygon.getEdgeLenght()));
+            this.jlbl_out_info_perimeter.setText(String.format("%d",
+                    (int) polygon.getEdgeLenght()*polygon.getEdgeCount()  ));
+            this.jlbl_out_info_area.setText(String.format("%d",(int) polygon.getArea()));
+            
+            if(nv instanceof RegularStarPolygon)
+                this.jtbtn_magic.setEnabled(true);
+            else{
+                this.jtbtn_magic.setSelected(false);
+                this.jtbtn_magic.setBackground(new Color(76,80,82));
+                this.jtbtn_magic.setEnabled(false);
+                canvas.drawStar().set(false);
+            }
+        });
+        RegularPolygon polygon = (RegularPolygon) canvas.getShapeProperty().get();
+        this.jlbl_out_info_shape_name.setText(polygon.getName());
+        this.jlbl_out_edge_length.setText(String.format("%3d",(int) polygon.getEdgeLenght()));
+        this.jlbl_out_info_area.setText(String.format("%d",(int) polygon.getArea()));
+        this.jlbl_out_info_perimeter.setText(String.format("%d",
+                    (int) polygon.getEdgeLenght()*polygon.getEdgeCount()  ));
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -313,20 +462,61 @@ public class JFrameApp extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    private void update_shape(int edges, double radius){
+        Point zero = new Point(0,0);
+        switch(edges){
+            case 3:
+                canvas.getShapeProperty().set(
+                        new Triangle(zero,radius)
+                );
+                break;
+            case 4:
+                canvas.getShapeProperty().set(
+                        new Square(zero,radius)
+                );
+                break;
+            case 5:
+                canvas.getShapeProperty().set(
+                        new Pentagon(zero,radius)
+                );
+                break;                    
+            case 6:
+                canvas.getShapeProperty().set(
+                        new Hexagon(zero,radius)
+                );
+                break;                    
+            case 7:
+                canvas.getShapeProperty().set(
+                        new Heptagon(zero,radius)
+                );
+                break;                    
+            case 8:
+                canvas.getShapeProperty().set(
+                        new Octagon(zero,radius)
+                );
+                break;                    
+            default:
+                canvas.getShapeProperty().set(
+                        null
+                );                    
+        }
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="Variables declarations">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbtn_reset_angle;
     private final javax.swing.JLabel jlbl_final_edges = new javax.swing.JLabel();
     private final javax.swing.JLabel jlbl_final_info = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_info_angle = new javax.swing.JLabel();
     private final javax.swing.JLabel jlbl_final_info_area = new javax.swing.JLabel();
+    private final javax.swing.JLabel jlbl_final_info_perimeter = new javax.swing.JLabel();
     private final javax.swing.JLabel jlbl_final_info_shape = new javax.swing.JLabel();
     private final javax.swing.JLabel jlbl_final_size = new javax.swing.JLabel();
     private javax.swing.JLabel jlbl_info_edge_length;
     private javax.swing.JLabel jlbl_out_edge_length;
     private javax.swing.JLabel jlbl_out_edges;
     private javax.swing.JLabel jlbl_out_info_area;
-    private javax.swing.JLabel jlbl_out_info_offset_angle;
+    private javax.swing.JLabel jlbl_out_info_perimeter;
     private javax.swing.JLabel jlbl_out_info_shape_name;
     private javax.swing.JLabel jlbl_out_size;
     private javax.swing.JMenuBar jmenu_bar;
@@ -339,11 +529,15 @@ public class JFrameApp extends javax.swing.JFrame {
     private javax.swing.JMenu jmenu_view;
     private javax.swing.JCheckBoxMenuItem jmenu_view_shcenter;
     private javax.swing.JCheckBoxMenuItem jmenu_view_shcircle;
-    private javax.swing.JPanel jpnl_canvas;
+    private javax.swing.JPanel jpnl_canvas_wrapper;
     private javax.swing.JPanel jpnl_options;
     private javax.swing.JPanel jpnl_out_info_area;
     private javax.swing.JSlider jslider_edges;
     private javax.swing.JSlider jslider_size;
     private javax.swing.JToggleButton jtbtn_magic;
     // End of variables declaration//GEN-END:variables
+    private Canvas canvas;
+    private Property<Integer> edges;
+    private Property<Double> size;
+    // </editor-fold>  
 }
