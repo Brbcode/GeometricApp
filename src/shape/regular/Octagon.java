@@ -5,6 +5,7 @@
 package shape.regular;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import shape.RegularStarPolygon;
 
 /**
@@ -13,7 +14,7 @@ import shape.RegularStarPolygon;
  */
 public class Octagon extends RegularStarPolygon{
 
-    public Octagon(Point center, double radius){
+    public Octagon(Point2D center, double radius){
         super(center,8,radius);
     }
     

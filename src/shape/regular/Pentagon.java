@@ -4,7 +4,8 @@
  */
 package shape.regular;
 
-import java.awt.Point;
+
+import java.awt.geom.Point2D;
 import shape.RegularStarPolygon;
 
 /**
@@ -13,7 +14,7 @@ import shape.RegularStarPolygon;
  */
 public class Pentagon extends RegularStarPolygon {
     
-    public Pentagon(Point center, double radius){
+    public Pentagon(Point2D center, double radius){
         super(center,5,radius);
     }
     

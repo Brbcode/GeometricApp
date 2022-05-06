@@ -5,14 +5,21 @@ import beans.property.Property;
 import beans.property.SimpleProperty;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
+import shape.Polygon;
 import shape.RegularPolygon;
 import shape.Shape;
 
@@ -27,8 +34,13 @@ public class Canvas extends javax.swing.JPanel{
     private BooleanProperty drawCircumscribedCircle;
     private BooleanProperty drawCenter;
     private BooleanProperty drawHelp;
-    private BooleanProperty drawStar;
-        
+    private BooleanProperty drawStar;    
+    private final double handleRadius = 5d;
+    private boolean isHovered = false;
+    private boolean isRotating = false;
+    private boolean canRotate = false;
+    private Thread hover_thread = null;
+    
     public Canvas(JComponent wrapper){
         super();       
         this.setSize(wrapper.getWidth()-20, wrapper.getHeight()-20);
@@ -46,30 +58,93 @@ public class Canvas extends javax.swing.JPanel{
         this.drawHelp.addListener((obs,ov,nv)->this.updateUI());
         this.drawStar.addListener((obs,ov,nv)->this.updateUI());
         
+               
+        
         this.addMouseListener(new MouseListener(){
+            private Point getMousePoint(){
+                Point zero = new Point(0,0);
+                Point pivot = getLocationOnScreen();
+                Rectangle rect = getBounds();
+                Point mouse = MouseInfo.getPointerInfo().getLocation();
+                mouse.x -= pivot.x;
+                mouse.x -= rect.width/2;
+                mouse.y -= pivot.y;
+                mouse.y -= rect.height/2; 
+                
+                return mouse;
+            }
+            
             @Override
-            public void mouseClicked(MouseEvent e) {                               
-                updateUI();
+            public void mouseClicked(MouseEvent e) {   
+                                
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                
+                Point mouse = getMousePoint();
+                for(Point2D p : (RegularPolygon) shapeProp.get())
+                {
+                    if(mouse.distance(p)<handleRadius)
+                        isRotating = true;
+                    
+                    break;
+                }                
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                
+                isRotating = false;
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-                
+            public void mouseEntered(MouseEvent e) {                
+                isHovered = true;
+                hover_thread = new Thread(()->{
+                    for(;isHovered;)
+                    {
+                        Point mouse = getMousePoint(); 
+                        Point2D p = null;
+                        for(var _p : (RegularPolygon) shapeProp.get())
+                        {
+                            p = _p;
+                            break;
+                        }
+                                                
+                        if(mouse.distance(p)<handleRadius){
+                            setCursor(new Cursor(Cursor.MOVE_CURSOR));
+                            canRotate = true;
+                        }
+                        else if(!isRotating){
+                            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            canRotate = false;
+                        }
+                        
+                        if(isRotating)
+                        {                            
+                            double angle=Math.atan2(p.getX(),p.getY()) - Math.atan2(mouse.x, mouse.y);
+                            var polygon = (RegularPolygon) shapeProp.get();
+                            if(Math.abs(angle)>Math.PI)
+                                angle = (angle>0?-1:1)*Math.PI;                            
+                            
+                            polygon.rotate( (angle>0)?0.5:-0.5 );                            
+                        }
+                        
+                        updateUI();
+                        
+                        try {
+                            Thread.sleep( (isRotating)?2:50);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Canvas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+                hover_thread.start();
             }
 
             @Override
-            public void mouseExited(MouseEvent e) {
-                
+            public void mouseExited(MouseEvent e) {                
+                isHovered = false;
+                isRotating = false;
             }
         
         });
@@ -89,7 +164,7 @@ public class Canvas extends javax.swing.JPanel{
         super.paintComponent(g); 
         Graphics2D g2d = (Graphics2D) g;
         g2d.translate(getWidth()/2, getHeight()/2);
-        g2d.rotate(Math.toRadians(-90));
+        //g2d.rotate(Math.toRadians(-90));
 
         //if(shapeProp.get()== null) return;
         
@@ -101,15 +176,15 @@ public class Canvas extends javax.swing.JPanel{
                             BasicStroke.JOIN_ROUND));            
             
             RegularPolygon polygon = (RegularPolygon) shapeProp.get();
-            List<Point> vertex = new ArrayList();
-            for(Point p : polygon)
+            List<Point2D> vertex = new ArrayList();
+            for(Point2D p : polygon)
                 vertex.add(p);
             
             for(int i = 0;i<vertex.size();i++)                    
             {
-                Point p1 = vertex.get(i);
-                Point p2 = vertex.get( (i+2)%vertex.size() );
-                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+                Point2D p1 = vertex.get(i);
+                Point2D p2 = vertex.get( (i+2)%vertex.size() );
+                g2d.drawLine((int) p1.getX(),(int) p1.getY(),(int) p2.getX(),(int) p2.getY());
             }
             
         }
@@ -117,22 +192,32 @@ public class Canvas extends javax.swing.JPanel{
         if(shapeProp.get()!= null && shapeProp.get() instanceof RegularPolygon){
             RegularPolygon polygon = (RegularPolygon) shapeProp.get();                      
             
-            Point fp = null,lp = null;
+            Point2D fp = null,lp = null;
             g2d.setColor(new Color(187,187,187));
             g2d.setStroke(new BasicStroke(2.0f,                  
                             BasicStroke.CAP_ROUND,    
                             BasicStroke.JOIN_ROUND));
             
-            for(Point p : polygon)
+            for(Point2D p : polygon)
             {
                 if(lp!=null)                    
-                    g2d.drawLine(lp.x, lp.y, p.x, p.y);
+                    g2d.drawLine((int) lp.getX(),(int) lp.getY(),(int) p.getX(),(int) p.getY());
                 else
                     fp = p;                    
                 
                 lp = p;
             }
-            g2d.drawLine(lp.x, lp.y, fp.x, fp.y);
+            g2d.drawLine((int) lp.getX(),(int) lp.getY(),(int) fp.getX(),(int) fp.getY());
+            
+            g2d.setColor(new Color(200,200,200,80));
+            g2d.setStroke(new BasicStroke(1.0f,                  
+                            BasicStroke.CAP_ROUND,    
+                            BasicStroke.JOIN_ROUND)); 
+            
+            int ix = (int) (fp.getX() - this.handleRadius);
+            int iy = (int) (fp.getY() - this.handleRadius);
+            
+            g2d.drawOval(ix, iy,(int) handleRadius*2, (int) handleRadius*2);
         }
         
         if(drawHelp.get() && shapeProp.get()!= null && shapeProp.get() instanceof RegularPolygon)
@@ -143,10 +228,10 @@ public class Canvas extends javax.swing.JPanel{
                             BasicStroke.JOIN_ROUND)); 
             
             RegularPolygon polygon = (RegularPolygon) shapeProp.get();
-            Point center = polygon.getCenter();
-            for(Point p : polygon)
+            Point2D center = polygon.getCenter();
+            for(Point2D p : polygon)
             {
-                g2d.drawLine(center.x, center.y, p.x, p.y);
+                g2d.drawLine((int) center.getX(),(int) center.getY(),(int) p.getX(),(int) p.getY());
             }
         }
         
@@ -174,7 +259,25 @@ public class Canvas extends javax.swing.JPanel{
             g2d.drawLine(size, size, -size, -size);
         }
         
-        
+        if( (canRotate || isRotating)  
+                && shapeProp.get()!= null && shapeProp.get() instanceof RegularPolygon){
+            g2d.setColor(new Color(200,200,200,80));
+            g2d.setStroke(new BasicStroke(1.0f,                  
+                            BasicStroke.CAP_ROUND,    
+                            BasicStroke.JOIN_ROUND)); 
+            
+            RegularPolygon polygon = (RegularPolygon) shapeProp.get();
+            var c = polygon.getCenter();
+            Point2D p = null;
+            for(Point2D _p : polygon)
+            {
+                p = new Point2D.Double(_p.getX()*1000,_p.getY()*1000);
+                break;
+            }
+            
+            g2d.drawLine((int) c.getX(), (int) c.getY(), 
+                    (int) p.getX(), (int) p.getY());
+        }
         
     }
        

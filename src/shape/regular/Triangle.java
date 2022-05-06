@@ -5,6 +5,7 @@
 package shape.regular;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import shape.RegularPolygon;
 
 /**
@@ -13,7 +14,7 @@ import shape.RegularPolygon;
  */
 public class Triangle extends RegularPolygon{
 
-    public Triangle(Point center, double radius)
+    public Triangle(Point2D center, double radius)
     {
         super(center,3,radius);        
     }

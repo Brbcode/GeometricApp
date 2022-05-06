@@ -5,13 +5,14 @@
 package shape;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  *
  * @author Brb-PC
  */
 public abstract class RegularStarPolygon extends RegularPolygon{
-    protected RegularStarPolygon(Point center,int edge_count,double radius)
+    protected RegularStarPolygon(Point2D center,int edge_count,double radius)
     {
         super(center,edge_count,radius);
     }

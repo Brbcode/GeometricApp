@@ -4,6 +4,7 @@ import beans.property.Property;
 import beans.property.SimpleProperty;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import shape.RegularPolygon;
@@ -96,6 +97,7 @@ public class JFrameApp extends javax.swing.JFrame {
         jlbl_final_size.setToolTipText("");
 
         jslider_size.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jslider_size.setMinimum(5);
         jslider_size.setMinorTickSpacing(10);
         jslider_size.setPaintTicks(true);
         jslider_size.setToolTipText("");
@@ -213,6 +215,11 @@ public class JFrameApp extends javax.swing.JFrame {
 
         jbtn_reset_angle.setText("Reset angle offset");
         jbtn_reset_angle.setToolTipText("");
+        jbtn_reset_angle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reset_angle(evt);
+            }
+        });
 
         jpnl_canvas_wrapper.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jpnl_canvas_wrapper.setAutoscrolls(true);
@@ -242,11 +249,19 @@ public class JFrameApp extends javax.swing.JFrame {
 
         jmenu_edit_reset.setText("Reset Rotation");
         jmenu_edit_reset.setToolTipText("");
-        jmenu_edit_reset.setEnabled(false);
+        jmenu_edit_reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reset_angle(evt);
+            }
+        });
         jmenu_edit.add(jmenu_edit_reset);
 
         jmenu_edit_scale.setText("Reset Scale");
-        jmenu_edit_scale.setEnabled(false);
+        jmenu_edit_scale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reset_scale(evt);
+            }
+        });
         jmenu_edit.add(jmenu_edit_scale);
 
         jmenu_bar.add(jmenu_edit);
@@ -366,6 +381,26 @@ public class JFrameApp extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_magic
 
+    private void reset_angle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_angle
+        Point2D p = null;
+        var shape = (RegularPolygon) canvas.getShapeProperty().get();
+        for(var _p : shape)
+        {
+            p = _p;
+            break;
+        }
+        
+        double angle=Math.atan2(p.getX(),p.getY()) - Math.atan2(0, -1);
+        angle = Math.toDegrees(angle);
+        System.out.println(angle);
+        shape.rotate(angle);
+        canvas.updateUI();
+    }//GEN-LAST:event_reset_angle
+
+    private void reset_scale(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_scale
+        this.size.set(0.2);
+    }//GEN-LAST:event_reset_scale
+
     private void late_init(){
         canvas = new Canvas(jpnl_canvas_wrapper);
         edges = new SimpleProperty<Integer>(3);
@@ -377,6 +412,7 @@ public class JFrameApp extends javax.swing.JFrame {
             this.jslider_edges.setValue(nv);
             this.jlbl_out_edges.setText(nv.toString());
             update_shape(nv,size.get()*canvas.getHeight()/2);
+            update_info();
         });
         this.jslider_edges.addChangeListener((event)->edges.set(this.jslider_edges.getValue()));
         this.jlbl_out_edges.setText(edges.get().toString());
@@ -389,7 +425,14 @@ public class JFrameApp extends javax.swing.JFrame {
         size.addListener((obs,ov,nv)->{
             this.jlbl_out_size.setText(String.format("%3d%%",(int) (nv*100)));
             this.jslider_size.setValue((int) (nv*100));
-            update_shape(edges.get(),nv*canvas.getHeight()/2);
+            var shape = (RegularPolygon) canvas.getShapeProperty().get();
+            if(shape!=null){
+                double scale = (nv*canvas.getHeight()/2) / shape.getRadius();
+                shape.scale(scale);
+                update_info();
+                canvas.updateUI();
+            }
+            
         });
         this.jslider_size.addChangeListener((event)->{
                 size.set( this.jslider_size.getValue()*1.0/100 );
@@ -408,17 +451,12 @@ public class JFrameApp extends javax.swing.JFrame {
         toggled = this.jmenu_show_shlines.isSelected(); 
         canvas.drawHelp().set(toggled);
         
-        Shape shape = new Triangle(new Point(0,0),size.get()*canvas.getHeight()/2);
+        RegularPolygon shape = new Triangle(new Point(0,0),size.get()*canvas.getHeight()/2);
+        shape.rotate(-90);
         canvas.getShapeProperty().set(shape);
         
         canvas.getShapeProperty().addListener((obs,ov,nv)->{
-            if(nv==null) return;
-            RegularPolygon polygon = (RegularPolygon) nv;
-            this.jlbl_out_info_shape_name.setText(polygon.getName());
-            this.jlbl_out_edge_length.setText(String.format("%3d",(int) polygon.getEdgeLenght()));
-            this.jlbl_out_info_perimeter.setText(String.format("%d",
-                    (int) polygon.getEdgeLenght()*polygon.getEdgeCount()  ));
-            this.jlbl_out_info_area.setText(String.format("%d",(int) polygon.getArea()));
+            update_info();
             
             if(nv instanceof RegularStarPolygon)
                 this.jtbtn_magic.setEnabled(true);
@@ -435,6 +473,15 @@ public class JFrameApp extends javax.swing.JFrame {
         this.jlbl_out_info_area.setText(String.format("%d",(int) polygon.getArea()));
         this.jlbl_out_info_perimeter.setText(String.format("%d",
                     (int) polygon.getEdgeLenght()*polygon.getEdgeCount()  ));
+    }
+    
+    private void update_info(){
+        RegularPolygon polygon = (RegularPolygon) canvas.getShapeProperty().get();
+        this.jlbl_out_info_shape_name.setText(polygon.getName());
+        this.jlbl_out_edge_length.setText(String.format("%3d",(int) polygon.getEdgeLenght()));
+        this.jlbl_out_info_perimeter.setText(String.format("%d",
+                (int) polygon.getEdgeLenght()*polygon.getEdgeCount()  ));
+        this.jlbl_out_info_area.setText(String.format("%d",(int) polygon.getArea()));
     }
     
     /**
@@ -464,43 +511,33 @@ public class JFrameApp extends javax.swing.JFrame {
     }
     
     private void update_shape(int edges, double radius){
-        Point zero = new Point(0,0);
+        Point2D zero = new Point2D.Double(0,0);
+        RegularPolygon shape = null;
         switch(edges){
             case 3:
-                canvas.getShapeProperty().set(
-                        new Triangle(zero,radius)
-                );
+                shape = new Triangle(zero,radius);
                 break;
             case 4:
-                canvas.getShapeProperty().set(
-                        new Square(zero,radius)
-                );
+                shape = new Square(zero,radius);
                 break;
             case 5:
-                canvas.getShapeProperty().set(
-                        new Pentagon(zero,radius)
-                );
+                shape = new Pentagon(zero,radius);                
                 break;                    
             case 6:
-                canvas.getShapeProperty().set(
-                        new Hexagon(zero,radius)
-                );
+                shape = new Hexagon(zero,radius);
                 break;                    
             case 7:
-                canvas.getShapeProperty().set(
-                        new Heptagon(zero,radius)
-                );
+                shape = new Heptagon(zero,radius);
                 break;                    
             case 8:
-                canvas.getShapeProperty().set(
-                        new Octagon(zero,radius)
-                );
+                shape = new Octagon(zero,radius);
                 break;                    
             default:
-                canvas.getShapeProperty().set(
-                        null
-                );                    
-        }
+                shape = null;                  
+        }        
+        shape.rotate(-90);
+        canvas.getShapeProperty().set(shape);
+        
     }
     
     // <editor-fold defaultstate="collapsed" desc="Variables declarations">
