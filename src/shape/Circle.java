@@ -4,8 +4,9 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
- *
- * @author Brb-PC
+ * Circle shape.
+ * 
+ * @author Bruno Garcia Tripoli
  */
 public class Circle implements Shape{
     private Point2D center;
@@ -19,11 +20,17 @@ public class Circle implements Shape{
         this.center = center;
         this.radius = radius;
     }
-    
+    /**
+     * Retrives circle center
+     * @return Point2D
+     */
     public Point2D getCenter(){
         return center;
     }
-    
+    /**
+     * Retrives circle radius
+     * @return The radius
+     */
     public double getRadius(){
         return radius;
     }

@@ -1,16 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package shape.regular;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import shape.RegularStarPolygon;
 
 /**
- *
- * @author Brb-PC
+ * RegularStarPolygon of 7 sides
+ * 
+ * @author Bruno Garcia Tripoli
  */
 public class Heptagon extends RegularStarPolygon{
 

@@ -1,11 +1,12 @@
 package shape;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
- *
- * @author Brb-PC
+ * Regular polygon is a polygon where every edge have same length and is 
+ * circumscribed inside of a circle.
+ * 
+ * @author Bruno Garcia Tripoli
  */
 public abstract class RegularPolygon extends Polygon implements Circumscribed{
     private Point2D center;    
@@ -28,7 +29,10 @@ public abstract class RegularPolygon extends Polygon implements Circumscribed{
         }
         return ret;
     }
-        
+    /**
+     * Return Edge Length
+     * @return 
+     */    
     public double getEdgeLenght(){
         return points[0].distance(points[1]);
     }
