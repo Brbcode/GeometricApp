@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package geometricapp;
 
 import java.awt.Desktop;
@@ -13,8 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Brb-PC
+ * About dialog windows.
+ * Show developer's info.
+ * 
+ * @author Bruno Garcia Tripoli
  */
 public class AboutDialog extends javax.swing.JDialog {
 
@@ -35,7 +33,7 @@ public class AboutDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        label1 = new java.awt.Label();
+        java.awt.Label label1 = new java.awt.Label();
         jbtn_git = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -75,7 +73,13 @@ public class AboutDialog extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * Event triggered when user click on 'View source' button.
+     * Open the project's github repository on user default browser.
+     * 
+     * @param evt - Input Event Info
+     */
     private void jbtn_gitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_gitActionPerformed
         try {
             openWebpage(new URL("https://github.com/Brbcode/GeometricApp"));
@@ -83,8 +87,8 @@ public class AboutDialog extends javax.swing.JDialog {
             Logger.getLogger(AboutDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jbtn_gitActionPerformed
-
-    public static boolean openWebpage(URI uri) {
+    
+    private static boolean openWebpage(URI uri) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
             try {
@@ -97,7 +101,7 @@ public class AboutDialog extends javax.swing.JDialog {
         return false;
     }
 
-    public static boolean openWebpage(URL url) {
+    private static boolean openWebpage(URL url) {
         try {
             return openWebpage(url.toURI());
         } catch (URISyntaxException e) {
@@ -150,6 +154,5 @@ public class AboutDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbtn_git;
-    private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables
 }

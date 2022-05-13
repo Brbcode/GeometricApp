@@ -25,7 +25,12 @@ import shape.Shape;
 
 
 /**
- *
+ * Canvas Component
+ * Draw a shape, and allow rotate it.
+ * Can draw circumscribed circle.
+ * Can draw help lines (line between center and every vertex.
+ * Can draw inscripted star shape.
+ * 
  * @author Bruno García Trípoli
  */
 public class Canvas extends javax.swing.JPanel{
@@ -40,7 +45,11 @@ public class Canvas extends javax.swing.JPanel{
     private boolean isRotating = false;
     private boolean canRotate = false;
     private Thread hover_thread = null;
-    
+            
+    /**
+     * Create a new Canvas Component inside <wrapper>
+     * @param wrapper - Parent component
+     */
     public Canvas(JComponent wrapper){
         super();       
         this.setSize(wrapper.getWidth()-20, wrapper.getHeight()-20);
@@ -58,7 +67,6 @@ public class Canvas extends javax.swing.JPanel{
         this.drawHelp.addListener((obs,ov,nv)->this.updateUI());
         this.drawStar.addListener((obs,ov,nv)->this.updateUI());
         
-               
         
         this.addMouseListener(new MouseListener(){
             private Point getMousePoint(){
@@ -149,16 +157,43 @@ public class Canvas extends javax.swing.JPanel{
         
         });
     }
-    
+    /**
+     * Get Shape Property
+     * @return Shape Property
+     */
     public Property<Shape> getShapeProperty(){return shapeProp;}
+    /**
+     * Get Shape size property [0,1]
+     * @return Shape Size Property
+     */
     public Property<Double> getShapeSizeProperty(){return size;}
+    /**
+     * Get Circumsribed Circle Draw Option Property
+     * @return Property
+     */
     public BooleanProperty drawCircumscribedCircle(){return drawCircumscribedCircle;}
+    /**
+     * Get Center Draw Option Property
+     * @return Property
+     */
     public BooleanProperty drawCenter(){return drawCenter;}
+    /**
+     * Get Help Lines Draw Option Property
+     * @return Property
+     */
     public BooleanProperty drawHelp(){return drawHelp;}
+    /**
+     * Get Inscripted Star Draw Option Property
+     * @return Property
+     */
     public BooleanProperty drawStar(){return drawStar;}
     
     
-
+    /**
+     * Override paint to draw shape.
+     * 
+     * @param g - Graphics
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); 

@@ -9,7 +9,7 @@ package beans.value;
  * ObservableValues.
  * 
  * @author Bruno Garcia Tripoli
- * @param <T> 
+ * @param <T> - Type of value that can be changed              
  */
 public interface ChangeListener<T> {
     /**

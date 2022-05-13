@@ -5,7 +5,7 @@ package beans.value;
  * value for changes. 
  * 
  * @author Bruno Garcia Tripoli
- * @param <T> 
+ * @param <T> - Type of value that can be changed    
  */
 public interface ObservableValue<T> {
     /**

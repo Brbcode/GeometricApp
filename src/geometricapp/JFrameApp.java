@@ -43,15 +43,21 @@ public class JFrameApp extends javax.swing.JFrame {
     private void initComponents() {
 
         jpnl_options = new javax.swing.JPanel();
+        final javax.swing.JLabel jlbl_final_edges = new javax.swing.JLabel();
         jslider_edges = new javax.swing.JSlider();
         jlbl_out_edges = new javax.swing.JLabel();
+        final javax.swing.JLabel jlbl_final_size = new javax.swing.JLabel();
         jslider_size = new javax.swing.JSlider();
         jlbl_out_size = new javax.swing.JLabel();
         jpnl_out_info_area = new javax.swing.JPanel();
+        final javax.swing.JLabel jlbl_final_info = new javax.swing.JLabel();
+        final javax.swing.JLabel jlbl_final_info_perimeter = new javax.swing.JLabel();
         jlbl_out_info_perimeter = new javax.swing.JLabel();
+        final javax.swing.JLabel jlbl_final_info_area = new javax.swing.JLabel();
         jlbl_out_info_area = new javax.swing.JLabel();
-        jlbl_info_edge_length = new javax.swing.JLabel();
+        javax.swing.JLabel jlbl_info_edge_length = new javax.swing.JLabel();
         jlbl_out_edge_length = new javax.swing.JLabel();
+        final javax.swing.JLabel jlbl_final_info_shape = new javax.swing.JLabel();
         jlbl_out_info_shape_name = new javax.swing.JLabel();
         jbtn_reset_angle = new javax.swing.JButton();
         jpnl_canvas_wrapper = new javax.swing.JPanel();
@@ -543,13 +549,6 @@ public class JFrameApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Variables declarations">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbtn_reset_angle;
-    private final javax.swing.JLabel jlbl_final_edges = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_info = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_info_area = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_info_perimeter = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_info_shape = new javax.swing.JLabel();
-    private final javax.swing.JLabel jlbl_final_size = new javax.swing.JLabel();
-    private javax.swing.JLabel jlbl_info_edge_length;
     private javax.swing.JLabel jlbl_out_edge_length;
     private javax.swing.JLabel jlbl_out_edges;
     private javax.swing.JLabel jlbl_out_info_area;

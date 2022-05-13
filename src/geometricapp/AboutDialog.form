@@ -54,6 +54,10 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Developed by Bruno Garcia Tripoli"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="jbtn_git">
       <Properties>

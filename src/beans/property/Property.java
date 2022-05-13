@@ -10,14 +10,32 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * A Property is a variable wrapper that allows detect changes on hiself and 
+ * trigger a change listener, also allows bind multiple property to auto update 
+ * their value to match all values.
+ * 
  * @author Bruno Garcia Tripoli
+ * @param <T> - Value type of property
  */
 public abstract class Property<T> implements ObservableValue<T>,WritableValue<T> {
+    /**
+     * Property value
+     */
     private T value;
+    /**
+     * List of change listeners.
+     */
     private List<ChangeListener<T>> listeners;
+    /**
+     * List of Properties attached to this Property
+     */
     private Set<Property<T>> binds;
     
+    /**
+     * Property constructor, set property initial value.
+     * 
+     * @param value - Avoid null values.
+     */
     public Property(T value){
         this.value = value;
         listeners = new ArrayList();
@@ -34,15 +52,29 @@ public abstract class Property<T> implements ObservableValue<T>,WritableValue<T>
         return listeners.remove(listener);
     }
     
+    /**
+     * Method to set internal value without trigger change listeners.
+     * This method is dangerous be careful in its use.
+     * @param value - Value to be set.
+     */
     protected final void __set(T value){         
         this.value = value;
     }
-    
+    /**
+     * Bind current property with another one.
+     * The bind is bidirectional.
+     * 
+     * @param other - Other property to be bind.
+     */
     public void bind(Property<T> other){
         binds.add(other);
         other.binds.add(this);
     }
-    
+    /**
+     * Remove a existent bind if exist otherwise return false.
+     * @param other - Other property to be unbind.
+     * @return True if the bind has been removed sucessfully, false otherwise. 
+     */
     public boolean unbind(Property<T> other){
         if(!binds.contains(other))
             return false;
